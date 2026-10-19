@@ -1,3 +1,6 @@
+
+from database import proved_dotaz
+
 from datetime import datetime
 
 import ollama
@@ -76,9 +79,32 @@ else:
             options={"temperature": 0},
         )
         sql = response["message"]["content"].strip()
+        sql = sql.strip("`").strip()
+
         print("\nVygenerovaný SQL dotaz:")
         print(sql)
+
+        if sql == "CANNOT_ANSWER":
+            print("Na tuto otázku neumím odpovědět.")
+        else:
+            try:
+                vysledek = proved_dotaz(sql)
+
+                print("\nVýsledek z databáze:")
+
+                for radek in vysledek:
+                    if len(radek) == 1:
+                        print(radek[0])
+                    else:
+                        print(radek)
+
+            except Exception as chyba:
+                print(f"SQL dotaz nebyl proveden: {chyba}")
+
     except Exception as chyba:
         print(f"Nepodařilo se spojit s Ollama nebo získat odpověď: {chyba}")
 
 # Poznámka: SQL zatím pouze zobrazujeme, nespouštíme ho nad databází.
+
+
+
