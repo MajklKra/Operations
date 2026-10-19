@@ -56,6 +56,12 @@ Date range rules:
 - Example: From October 1 to October 18, 2026:
   datum >= '2026-10-01'
   AND datum < '2026-10-19'
+- When the user asks about one specific day,
+  ALWAYS use a date range covering the entire day.
+- Never use datum = 'YYYY-MM-DD'.
+- Example for September 15, 2026:
+  datum >= '2026-09-15'
+  AND datum < '2026-09-16'
 
 
 SQL rules:
@@ -64,6 +70,14 @@ SQL rules:
 - Use single quotes for string values.
 - Generate only a SELECT query; never modify the database.
 - If the question cannot be answered from the schema, return CANNOT_ANSWER.
+- Never use JOIN.
+- Never use subqueries or nested SELECT.
+- Never use CTE or WITH.
+- Always query the udalosti table directly.
+- Use simple SELECT statements.
+- Do not invent filters that the user did not request.
+- For counting records, use COUNT(*).
+- For listing records, use SELECT with LIMIT.
 """
 
 if not otazka:
@@ -92,11 +106,14 @@ else:
 
                 print("\nVýsledek z databáze:")
 
-                for radek in vysledek:
-                    if len(radek) == 1:
-                        print(radek[0])
-                    else:
-                        print(radek)
+                if not vysledek:
+                    print("Pro zadané podmínky nebyly nalezeny žádné záznamy.")
+                else:
+                    for radek in vysledek:
+                        if len(radek) == 1:
+                            print(radek[0])
+                        else:
+                            print(radek)
 
             except Exception as chyba:
                 print(f"SQL dotaz nebyl proveden: {chyba}")

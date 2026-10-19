@@ -30,10 +30,37 @@ def proved_dotaz(sql):
     if list(strom.find_all(exp.Subquery, exp.CTE)):
         raise ValueError("Vnořené dotazy nejsou povoleny.")
 
-    # Povolená je pouze jedna tabulka
+    # # Povolená je pouze jedna tabulka
+    # tabulky = list(strom.find_all(exp.Table))
+
+    # print("SQL tabulky:", [(t.name, t.sql()) for t in tabulky])
+    # print("Počet tabulek:", len(tabulky))
+
+    # if len(tabulky) != 1 or tabulky[0].name.lower() != "udalosti":
+    #     raise ValueError("Nepovolená tabulka.")
+
+
+    # Kontrola povolené tabulky
     tabulky = list(strom.find_all(exp.Table))
-    if len(tabulky) != 1 or tabulky[0].name.lower() != "udalosti":
+
+    print("SQL tabulky:", [(t.name, t.sql()) for t in tabulky])
+    print("Počet tabulek:", len(tabulky))
+
+    if len(tabulky) != 1:
+        raise ValueError("SQL musí obsahovat právě jednu tabulku.")
+
+    nazev_tabulky = tabulky[0].name.lower().strip()
+
+    print("Název tabulky:", repr(nazev_tabulky))
+    print("Je povolená:", nazev_tabulky == "udalosti")
+
+    if nazev_tabulky != "udalosti":
         raise ValueError("Nepovolená tabulka.")
+
+
+
+
+
 
     # Zákaz spojování tabulek
     if list(strom.find_all(exp.Join)):
