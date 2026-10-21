@@ -78,6 +78,12 @@ SQL rules:
 - Do not invent filters that the user did not request.
 - For counting records, use COUNT(*).
 - For listing records, use SELECT with LIMIT.
+- When the user asks to show, display, or list a record,
+  return all columns of that record.
+- If the user asks for a record by ID,
+  use SELECT * FROM udalosti WHERE id = requested_id.
+- Never return only the id column unless the user
+  explicitly asks for IDs.
 """
 
 if not otazka:
@@ -101,6 +107,7 @@ else:
         if sql == "CANNOT_ANSWER":
             print("Na tuto otázku neumím odpovědět.")
         else:
+            
             try:
                 vysledek = proved_dotaz(sql)
 

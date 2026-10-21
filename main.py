@@ -6,13 +6,7 @@ import duckdb
 df = pd.read_excel("Operations.xlsx")
 
 # 2. Přejmenování sloupců
-df.columns = [
-    "id",
-    "datum",
-    "zarizeni",
-    "typ_udalosti",
-    "popis"
-]
+df.columns = ["id","datum","zarizeni","typ_udalosti","popis"]
 
 # 3. Připojení k databázi
 con = duckdb.connect("operations.duckdb")

@@ -10,4 +10,9 @@ WHERE zarizeni = 'D'
 
 vysledek = proved_dotaz(sql)
 
-print(vysledek.to_string(index=False))
+# print(vysledek.to_string(index=False))
+
+
+pocet = vysledek[0][0]
+
+print(f"Výsledek dotazu: {pocet}")

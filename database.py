@@ -1,5 +1,4 @@
 
-
 import duckdb
 from sqlglot import parse, exp
 
@@ -16,6 +15,7 @@ POVOLENE_FUNKCE = {
 }
 
 def proved_dotaz(sql):
+    
     prikazy = parse(sql, read="duckdb")
 
     if len(prikazy) != 1:
@@ -29,16 +29,6 @@ def proved_dotaz(sql):
     # Zakážeme vnořené dotazy a CTE
     if list(strom.find_all(exp.Subquery, exp.CTE)):
         raise ValueError("Vnořené dotazy nejsou povoleny.")
-
-    # # Povolená je pouze jedna tabulka
-    # tabulky = list(strom.find_all(exp.Table))
-
-    # print("SQL tabulky:", [(t.name, t.sql()) for t in tabulky])
-    # print("Počet tabulek:", len(tabulky))
-
-    # if len(tabulky) != 1 or tabulky[0].name.lower() != "udalosti":
-    #     raise ValueError("Nepovolená tabulka.")
-
 
     # Kontrola povolené tabulky
     tabulky = list(strom.find_all(exp.Table))
@@ -56,11 +46,6 @@ def proved_dotaz(sql):
 
     if nazev_tabulky != "udalosti":
         raise ValueError("Nepovolená tabulka.")
-
-
-
-
-
 
     # Zákaz spojování tabulek
     if list(strom.find_all(exp.Join)):
@@ -89,7 +74,6 @@ def proved_dotaz(sql):
             raise ValueError(
                 f"Nepovolená SQL funkce: {nazev}"
             )
-
 
     con = duckdb.connect(DB_PATH, read_only=True)
 
